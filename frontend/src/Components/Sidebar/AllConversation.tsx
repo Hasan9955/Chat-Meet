@@ -1,9 +1,12 @@
+import Conversation from "./Conversation";
 
 
 const AllConversation = () => {
     return (
-        <div>
-            
+        <div className="py-2 flex flex-col overflow-auto">
+            <Conversation />
+            <Conversation />
+            <Conversation /> 
         </div>
     );
 };
