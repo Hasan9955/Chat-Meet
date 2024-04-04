@@ -5,14 +5,14 @@ const messageSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: "user",
         required: true
-    },
+    }, 
     receiverId:{
         type: mongoose.Schema.Types.ObjectId,
         ref: "user",
         required: true
     },
     message:{
-        type: string,
+        type: String,
         required: true
     }
 
