@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 
 
 const Login = () => {
@@ -21,7 +22,8 @@ const Login = () => {
                         </label>
                         <input type="text" placeholder="password" className="w-full input input-bordered h-10 " />
                     </div>
-                    <p className="mt-2">New here? <a className="text-blue-500 font-bold hover:underline" href="/singUp">Sing Up</a></p>
+                    <p className="mt-2">New here? <Link
+                    className="text-blue-500 font-bold hover:underline" to="/signUp"> Sing Up</Link></p>
                     <div>
                         <button className="btn btn-block mt-2 btn-sm">Login now</button>
                     </div>
