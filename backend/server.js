@@ -8,12 +8,16 @@ import connectMongoDB from "./db/connectMongodb.js";
 import cookieParser from "cookie-parser";
 import express from "express";
 import { app, server, io } from "./lib/socket.io.js";
-
+import cors from "cors";
 
 
 
 
 app.use(express.json());
+app.use(cors({
+    origin: "http://localhost:3000",
+    credentials: true,
+}));
 app.use(cookieParser());
 const PORT = process.env.PORT || 5000;
 

@@ -1,6 +1,47 @@
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { FaEye, FaEyeSlash } from 'react-icons/fa';
+import toast from 'react-hot-toast';
+import { signup } from '../../hooks/useSignup';
+
+
 
 const SignUp = () => {
+
+    const [error, setError] = useState<boolean>(false);
+    const [passwordError, setPasswordError] = useState<boolean>(false);
+    const [showPassword, setShowPassword] = useState<boolean>(false);
+    const [showConfirmPassword, setShowConfirmPassword] = useState<boolean>(false);
+
+    const [input, setInput] = useState({
+        fullName: '',
+        username: '',
+        password: '',
+        confirmPassword: '',
+        gender: ''
+    })
+
+
+
+    const handleSignUp = async (e: React.FormEvent) => {
+        e.preventDefault();
+
+        if (input.password !== input.confirmPassword) {
+            toast.error("Passwords do not match.");
+        }
+        if (input.password.length < 6) {
+            toast.error("Password must be at least 6 characters long.");
+        } else {
+            const res = await signup(input);
+
+            if(res.data.error){
+                toast.error("An error occurred while signing up.");
+            }
+
+            
+            console.log(res);
+        }
+    }
     return (
         <div className="flex flex-col justify-center items-center min-w-96 mx-auto ">
             <div className="w-full p-6 rounded-lg shadow-md bg-gray-400 bg-clip-padding backdrop-filter backdrop-blur-lg bg-opacity-30">
@@ -8,34 +49,85 @@ const SignUp = () => {
                     Sign Up <span className="text-blue-500">Chat Meet</span>
                 </h1>
 
-                <form>
+                <form onSubmit={handleSignUp}>
                     <div>
                         <label className="label p-2">
                             <span className="text-white label-text">Full Name</span>
                         </label>
-                        <input type="text" placeholder="Your name" className="w-full input input-bordered h-10 " />
+                        <input type="text" placeholder="Your name" className="w-full input input-bordered h-10 " value={input.fullName} onChange={(e) => setInput({ ...input, fullName: e.target.value })} required />
                     </div>
                     <div>
                         <label className="label p-2">
                             <span className="text-white label-text">Username</span>
                         </label>
-                        <input type="text" placeholder="Enter username" className="w-full input input-bordered h-10 " />
+                        <input type="text" placeholder="Enter username" className="w-full input input-bordered h-10 " value={input.username} onChange={(e) => setInput({ ...input, username: e.target.value })} required />
                     </div>
+                    {/* Password */}
                     <div>
                         <label className="label p-2">
                             <span className="text-white label-text">Password</span>
                         </label>
-                        <input type="text" placeholder="password" className="w-full input input-bordered h-10 " />
+                        <div className="relative">
+                            <input
+                                type={showPassword ? 'text' : 'password'}
+                                placeholder="Password"
+                                required
+                                className="w-full input input-bordered h-12 rounded-xl pr-10"
+                                value={input.password}
+                                onChange={(e) => {
+                                    setInput({ ...input, password: e.target.value })
+                                    setPasswordError(input.password.length < 5 ? true : false)
+                                }
+                                }
+                            />
+                            <span
+                                className="absolute right-3 top-4 cursor-pointer text-gray-400 text-lg"
+                                onClick={() => setShowPassword(!showPassword)}
+                            >
+                                {showPassword ? <FaEye /> : <FaEyeSlash />}
+                            </span>
+                        </div>
+                        {passwordError && (
+                            <p className="text-red-400 mt-2 text-sm">
+                                Password must be at least 6 character
+                            </p>
+                        )}
                     </div>
+
                     <div>
                         <label className="label p-2">
                             <span className="text-white label-text">Confirm Password</span>
                         </label>
-                        <input type="text" placeholder="Confirm password" className="w-full input input-bordered h-10 " />
+                        <div className="relative">
+                            <input
+                                type={showConfirmPassword ? 'text' : 'password'}
+                                required
+                                placeholder="Confirm password"
+                                className="w-full input input-bordered h-12 rounded-xl pr-10"
+                                value={input.confirmPassword}
+                                onChange={(e) => {
+                                    const value = e.target.value;
+                                    setInput({ ...input, confirmPassword: value });
+                                    setError(input.password !== value);
+                                }}
+                            />
+                            <span
+                                className="absolute right-3 top-4 cursor-pointer text-gray-400 text-lg"
+                                onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                            >
+                                {showConfirmPassword ? <FaEye /> : <FaEyeSlash />}
+                            </span>
+                        </div>
+                        {error && (
+                            <p className="text-red-400 mt-2 text-sm">
+                                Passwords do not match
+                            </p>
+                        )}
                     </div>
+
                     <div>
                         <label className="label">
-                            <span className="text-white label-text">Gender</span>
+                            <span className="text-white label-text -mb-2">Gender</span>
                         </label>
                         <div className="form-control flex-row items-center gap-5 text-white">
                             <label className="cursor-pointer label">
@@ -45,6 +137,8 @@ const SignUp = () => {
                                     name="gender"
                                     value="male"
                                     className="radio radio-info ml-2"
+                                    onChange={() => setInput({ ...input, gender: "male" })}
+                                    required= {input.gender === ''}
                                 />
                             </label>
                             <label className="cursor-pointer label">
@@ -54,6 +148,8 @@ const SignUp = () => {
                                     name="gender"
                                     value="female"
                                     className="radio radio-info ml-2"
+                                    onChange={() => setInput({ ...input, gender: "female" })}
+                                    required= {input.gender === ''}
                                 />
                             </label>
                         </div>
