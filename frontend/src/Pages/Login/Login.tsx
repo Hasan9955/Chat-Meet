@@ -1,4 +1,4 @@
-
+import { Link } from 'react-router-dom';
 
 const Login = () => {
     return (
@@ -11,20 +11,23 @@ const Login = () => {
                 <form>
                     <div>
                         <label className="label p-2">
-                            <span className="text-base label-text">Username</span>
+                            <span className="text-base label-text text-white">Username</span>
                         </label>
                         <input type="text" placeholder="Enter username" className="w-full input input-bordered h-10 " />
                     </div>
                     <div>
                         <label className="label p-2">
-                            <span className="text-base label-text">Password</span>
+                            <span className="text-base label-text text-white">Password</span>
                         </label>
                         <input type="text" placeholder="password" className="w-full input input-bordered h-10 " />
                     </div>
-                    <p className="mt-2">New here? <a className="text-blue-500 font-bold hover:underline" href="/singUp">Sing Up</a></p>
+                    
                     <div>
-                        <button className="btn btn-block mt-2 btn-sm">Login now</button>
+                        <button className="btn btn-block mt-6 btn-sm">Login now</button>
                     </div>
+                    <p className="mt-2 text-white">Don't have an account? 
+                        <Link to={'/signup'} className="text-blue-500 font-bold hover:underline" > Sing Up</Link>
+                        </p>
                 </form>
             </div>
         </div>
