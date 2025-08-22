@@ -1,14 +1,14 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { FaEye, FaEyeSlash } from 'react-icons/fa';
-import { useAuth } from '../../Context/useAuth';
-import toast from 'react-hot-toast';
+import { FaEye, FaEyeSlash } from 'react-icons/fa'; 
+import useLogin from '../../hooks/useLogin';
 
 
 const Login = () => {
 
-    const { setAuthUser } = useAuth();
+    
     const [showPassword, setShowPassword] = useState<boolean>(false);
+    const { login } = useLogin();
     const [info, setInfo] = useState({
         username: '',
         password: ''
@@ -18,26 +18,7 @@ const Login = () => {
     const handleLogin = async (e: React.FormEvent) => {
         e.preventDefault();
 
-        const res = await fetch('/api/auth/login', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(info)
-        })
-
-        const data = await res.json();
-        if (!res.ok) {
-            console.error(data);
-            return;
-        }
-        console.log(data);
-
-        // Set local storage
-        setAuthUser(data);
-
-        localStorage.setItem('authUser', JSON.stringify(data));
-        toast.success("Login successful");
+        await login(info.username, info.password);
     }
 
 
