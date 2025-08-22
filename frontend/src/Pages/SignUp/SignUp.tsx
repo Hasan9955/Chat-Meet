@@ -1,8 +1,7 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
-import toast from 'react-hot-toast';
-import { signup } from '../../hooks/useSignup';
+import useSignup from '../../hooks/useSignup';
 
 
 
@@ -12,6 +11,8 @@ const SignUp = () => {
     const [passwordError, setPasswordError] = useState<boolean>(false);
     const [showPassword, setShowPassword] = useState<boolean>(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState<boolean>(false);
+    const { loading, signup } = useSignup();
+
 
     const [input, setInput] = useState({
         fullName: '',
@@ -25,22 +26,8 @@ const SignUp = () => {
 
     const handleSignUp = async (e: React.FormEvent) => {
         e.preventDefault();
+        await signup(input);
 
-        if (input.password !== input.confirmPassword) {
-            toast.error("Passwords do not match.");
-        }
-        if (input.password.length < 6) {
-            toast.error("Password must be at least 6 characters long.");
-        } else {
-            const res = await signup(input);
-
-            if(res.data.error){
-                toast.error("An error occurred while signing up.");
-            }
-
-            
-            console.log(res);
-        }
     }
     return (
         <div className="flex flex-col justify-center items-center min-w-96 mx-auto ">
@@ -48,7 +35,6 @@ const SignUp = () => {
                 <h1 className="text-3xl font-semibold text-center text-gray-300">
                     Sign Up <span className="text-blue-500">Chat Meet</span>
                 </h1>
-
                 <form onSubmit={handleSignUp}>
                     <div>
                         <label className="label p-2">
@@ -138,7 +124,7 @@ const SignUp = () => {
                                     value="male"
                                     className="radio radio-info ml-2"
                                     onChange={() => setInput({ ...input, gender: "male" })}
-                                    required= {input.gender === ''}
+                                    required={input.gender === ''}
                                 />
                             </label>
                             <label className="cursor-pointer label">
@@ -149,14 +135,16 @@ const SignUp = () => {
                                     value="female"
                                     className="radio radio-info ml-2"
                                     onChange={() => setInput({ ...input, gender: "female" })}
-                                    required= {input.gender === ''}
+                                    required={input.gender === ''}
                                 />
                             </label>
                         </div>
                     </div>
                     <div>
-                        <button className="btn btn-block mt-2 btn-sm">Sign up</button>
-                    </div>
+						<button className='btn btn-block btn-sm mt-2 border border-slate-700' disabled={loading}>
+							{loading ? <span className='loading loading-spinner'></span> : "Sign Up"}
+						</button>
+					</div>
                 </form>
 
                 <p className="mt-2 text-white">Already have an account?

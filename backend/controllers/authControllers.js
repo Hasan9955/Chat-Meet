@@ -5,6 +5,7 @@ import generateToken from "../utils/generateToken.js";
 
 export const signup = async (req, res) => {
     try { 
+        console.log(req.body);
         const { fullName, username, password, confirmPassword, gender } = req.body;
 
         if (password !== confirmPassword) {
@@ -60,17 +61,17 @@ export const signup = async (req, res) => {
 export const login = async (req, res) => {
     try {
         const {username, password} = req.body;
-        console.log(0);
+        
         const user = await User.findOne({username})
-        console.log(1);
+        
         const isPasswordCorrect = await bcryptjs.compare(password, user?.password || "")
-        console.log(2);
+        
         if(!user, !isPasswordCorrect){
             return res.status(400).json({error: "invalid username or password"})
         }
-        console.log(3);
-        generateToken(user._id, res);
-        console.log(4);
+       
+       generateToken(user._id, res);
+       
         res.status(200).json({
             _id: user._id,
             fullName: user.fullName,
@@ -80,7 +81,6 @@ export const login = async (req, res) => {
     } catch (error) {
         console.log("Error in login controller", error.message);
         res.status(500).json({error: "Internal Server Error"});
-
     }
 }
 

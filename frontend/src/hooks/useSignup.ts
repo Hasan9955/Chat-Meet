@@ -1,45 +1,73 @@
-import toast from "react-hot-toast";
+import { useState } from "react";
+import toast from "react-hot-toast";  
+import { useAuth } from "../Context/useAuth";
 
 
 
+const useSignup = () => {
+    const [loading, setLoading] = useState(false);
+    const { setAuthUser } = useAuth();
 
-export const signup = async (payload: { 
-    fullName: string; 
-    username: string; 
-    password: string; 
-    confirmPassword: string;
-    gender: string;
-}) => {
-  
-    const {fullName, username, password, confirmPassword, gender} = payload;
-  
-     if (!fullName || !username || !password || !confirmPassword || !gender) {
-        toast.error("All fields are required.");
+    const signup = async ({ fullName, username, password, confirmPassword, gender }: {
+        fullName: string;
+        username: string;
+        password: string;
+        confirmPassword: string;
+        gender: string;
+    }) => {
+        const success = handleInputErrors({ fullName, username, password, confirmPassword, gender });
+        if (!success) return;
+
+        setLoading(true);
+        try {
+            const res = await fetch("/api/auth/signup", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ fullName, username, password, confirmPassword, gender }),
+            });
+
+            const data = await res.json();
+            if (data.error) {
+                throw new Error(data.error);
+            }
+            localStorage.setItem("chat-user", JSON.stringify(data));
+            setAuthUser(data);
+        } catch (error) {
+            if (error instanceof Error) {
+                toast.error(error.message);
+            } else {
+                toast.error("An error occurred during signup");
+            }
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    return { loading, signup };
+};
+export default useSignup;
+
+function handleInputErrors({ fullName, username, password, confirmPassword, gender }: {
+        fullName: string;
+        username: string;
+        password: string;
+        confirmPassword: string;
+        gender: string;
+    }) {
+    if (!fullName || !username || !password || !confirmPassword || !gender) {
+        toast.error("Please fill in all fields");
         return false;
     }
 
-    try {
-        const res = await fetch('/api/auth/signup', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                fullName,
-                username,
-                password,
-                confirmPassword,
-                gender
-        })
-        });
-        const data = res.json();
-        console.log(data);
-        return data;
-    } catch (error) {
-        console.log(error);
-        toast.error("An error occurred while signing up.");
+    if (password !== confirmPassword) {
+        toast.error("Passwords do not match");
+        return false;
     }
 
+    if (password.length < 6) {
+        toast.error("Password must be at least 6 characters");
+        return false;
+    }
 
-
+    return true;
 }
