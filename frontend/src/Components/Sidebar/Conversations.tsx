@@ -1,5 +1,5 @@
 import useGetConversation from "../../hooks/useGetConversation";
-import { TConversation } from "../../types/conversation";
+import { TConversation } from "../../types/conversationType";
 import getRandomEmoji from "../../utils/emojis";
 import Conversation from "./Conversation";
 

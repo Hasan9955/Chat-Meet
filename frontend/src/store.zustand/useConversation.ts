@@ -1,22 +1,16 @@
 import { create } from "zustand";
-import { TConversation } from "../types/conversation";
+import { TConversation } from "../types/conversationType";
+import TMessage from "../types/messageType";
 
 
 
-interface Message {
-  id: string;
-  conversationId: string;
-  sender: string;
-  content: string;
-  timestamp: Date;
-  // Add more fields as needed
-}
+
 
 interface ConversationState {
   selectedConversation: TConversation | null;
   setSelectedConversation: (conversation: TConversation | null) => void;
-  messages: Message[];
-  setMessages: (messages: Message[]) => void;
+  messages: TMessage[];
+  setMessages: (messages: TMessage[]) => void;
 }
 
 const useConversation = create<ConversationState>((set) => ({

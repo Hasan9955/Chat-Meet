@@ -1,11 +1,11 @@
 import useConversation from "../../store.zustand/useConversation";
-import { TConversation } from "../../types/conversation";
+import { TConversation } from "../../types/conversationType";
 
 
 const Conversation = ({ conversation, emoji, lastIdx }: { conversation: TConversation; emoji: string; lastIdx: boolean }) => {
 
 
-    const {selectedConversation, setSelectedConversation} = useConversation();
+    const { selectedConversation, setSelectedConversation } = useConversation();
 
     const isSelected = selectedConversation?._id === conversation._id;
 
@@ -13,7 +13,7 @@ const Conversation = ({ conversation, emoji, lastIdx }: { conversation: TConvers
     return (
         <>
             <div className={`flex gap-2 items-center hover:bg-sky-500 rounded p-2 py-1 cursor-pointer ${isSelected ? 'bg-sky-500' : ''}`}
-            onClick={() => setSelectedConversation(conversation)}
+                onClick={() => setSelectedConversation(conversation)}
             >
                 <div className="userImg">
                     <div className="w-12 rounded-full">
