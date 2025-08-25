@@ -1,9 +1,11 @@
 interface TMessage {
-  id: string;
-  conversationId: string;
-  sender: string;
-  content: string;
-  timestamp: Date; 
+  _id: string;
+  senderId: string;
+  receiverId: string;
+  message: string;
+  createdAt: Date; 
+  updatedAt: Date
 }
+
 
 export default TMessage;
