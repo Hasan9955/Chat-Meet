@@ -7,7 +7,7 @@ const AllConversation = () => {
 
     const { conversations, loading } = useGetConversation();
 
-    console.log("Conversations:", conversations);
+    // console.log("Conversations:", conversations);
 
     return (
         <div className="py-2 flex flex-col overflow-auto">
